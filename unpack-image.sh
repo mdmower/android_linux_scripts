@@ -17,14 +17,16 @@ extract() {
     cd ..
 }
 
-delout() {
+cleanup() {
     rm out.img out.img-base out.img-cmdline out.img-pagesize
+    mv out.img-zImage zImage
+    mv out.img-ramdisk.gz ramdisk.gz
 }
 
 if [ -f $@ ]; then
     strip $@
     extract
-    delout
+    cleanup
 else
     echo "No image specified"
 fi
