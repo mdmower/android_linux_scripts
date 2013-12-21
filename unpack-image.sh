@@ -1,5 +1,9 @@
 #!/bin/bash
 
+command_exists () {
+    type "$1" &> /dev/null
+}
+
 strip() {
     cp $@ out.img
     unpackbootimg -i out.img > image_info.txt
@@ -11,17 +15,22 @@ strip() {
 }
 
 extract() {
-    mkdir ramdisk
+    mkdir -p ramdisk
     cd ramdisk
-    gunzip -c ../out.img-ramdisk.gz | cpio -i
+    gunzip -c ../out.img-ramdisk.gz | cpio -iud
     cd ..
 }
 
 cleanup() {
-    rm out.img out.img-base out.img-cmdline out.img-pagesize
+    rm out.img out.img-base out.img-cmdline out.img-pagesize out.img-ramdisk_offset out.img-dt.img
     mv out.img-zImage zImage
     mv out.img-ramdisk.gz ramdisk.gz
 }
+
+if ! command_exists unpackbootimg; then
+    echo "unpackbootimg not found"
+    exit
+fi
 
 if [ -f $@ ]; then
     strip $@
