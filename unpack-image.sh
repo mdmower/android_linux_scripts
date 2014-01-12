@@ -22,9 +22,9 @@ extract() {
 }
 
 cleanup() {
-    rm out.img out.img-base out.img-cmdline out.img-pagesize out.img-ramdisk_offset out.img-dt.img
     mv out.img-zImage zImage
     mv out.img-ramdisk.gz ramdisk.gz
+    rm out.img out.img-*
 }
 
 if ! command_exists unpackbootimg; then
@@ -32,11 +32,11 @@ if ! command_exists unpackbootimg; then
     exit
 fi
 
-if [ -f $@ ]; then
+if [ ! -z "$@" ] && [ -f $@ ]; then
     strip $@
     extract
     cleanup
 else
-    echo "No image specified"
+    echo "No valid image specified"
 fi
 
