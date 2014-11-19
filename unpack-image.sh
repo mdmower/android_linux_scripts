@@ -22,6 +22,10 @@ extract() {
 }
 
 cleanup() {
+    DTSIZE=$(du out.img-dt | awk '{ print $1 }')
+    if [ "$DTSIZE" -gt "0" ]; then
+        mv out.img-dt dt
+    fi
     mv out.img-zImage zImage
     mv out.img-ramdisk.gz ramdisk.gz
     rm out.img out.img-*
