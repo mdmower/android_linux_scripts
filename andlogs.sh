@@ -8,6 +8,7 @@ if [ -z "$1" ]; then
 fi
 
 BFNAME="$1"
+adb wait-for-device
 adb logcat > "$BFNAME""_lc.log" &
 LCPID=$!
 adb shell 'su -c "cat /proc/kmsg"' > "$BFNAME""_kmsg.log" &
